@@ -5,7 +5,6 @@
  */
 package me.kyleclemens.ffxivraffler.gui
 
-import me.kyleclemens.ffxivraffler.gui.WithMainPanel
 import java.awt.Dialog
 import java.awt.Toolkit
 import java.awt.event.ActionEvent

@@ -5,8 +5,6 @@
  */
 package me.kyleclemens.ffxivraffler.gui
 
-import me.kyleclemens.ffxivraffler.gui.GUIUtils
-import me.kyleclemens.ffxivraffler.gui.WithMainPanel
 import me.kyleclemens.ffxivraffler.log.paste.LogParser
 import me.kyleclemens.ffxivraffler.util.DefaultKeyListener
 import java.awt.event.KeyEvent
@@ -36,7 +34,6 @@ class Raffle : WithMainPanel {
                 this@Raffle.processLog()
             }
         })
-        this.winnersTextPane.isOpaque = false
     }
 
     private fun processLog() {

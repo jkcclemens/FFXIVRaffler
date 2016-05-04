@@ -14,7 +14,9 @@
             <preferred-size width="300" height="600"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <margin top="8" left="8" bottom="8" right="8"/>
+        </properties>
       </component>
       <grid id="8f0b5" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
@@ -77,6 +79,7 @@
                 </constraints>
                 <properties>
                   <editable value="false"/>
+                  <opaque value="false"/>
                 </properties>
               </component>
             </children>
