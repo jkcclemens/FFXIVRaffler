@@ -9,12 +9,13 @@ class LogParser(val rawLog: String) {
 
     companion object {
         val randomRegex = Regex("Random! ([\\w ']+) rolled (\\d+)!")
+        val newlineRegex = Regex("\r?\n")
     }
 
     fun parse(): Rolls {
         val map = RaffleMap(hashMapOf<String, Int>())
         this.rawLog
-            .split("\n")
+            .split(LogParser.newlineRegex)
             .map { LogParser.randomRegex.find(it) }
             .filterNotNull()
             .associateTo(map) { it.groupValues[1] to it.groupValues[2].toInt() }
