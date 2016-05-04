@@ -6,6 +6,8 @@
 package me.kyleclemens.ffxivraffle
 
 import me.kyleclemens.ffxivraffle.log.paste.LogParser
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JPanel
@@ -26,6 +28,19 @@ class Raffle : WithMainPanel {
 
     init {
         this.processButton.addActionListener { this.processLog() }
+        this.targetField.addKeyListener(object : KeyListener {
+            override fun keyTyped(e: KeyEvent?) {
+            }
+
+            override fun keyPressed(e: KeyEvent?) {
+                if (e == null || e.keyCode != KeyEvent.VK_ENTER) return
+                this@Raffle.processLog()
+            }
+
+            override fun keyReleased(e: KeyEvent?) {
+            }
+
+        })
         this.winnersTextPane.isOpaque = false
     }
 
@@ -43,6 +58,10 @@ class Raffle : WithMainPanel {
         }
         val parser = LogParser(log)
         val rolls = parser.parse()
+        if (rolls.entries.size < 1) {
+            GUIUtils.showErrorDialog("No rolls detected", "There were no valid rolls detected in the log.")
+            return
+        }
         this.winnersTextPane.text = rolls.getWinnersFor(target).joinToString("\n")
     }
 
