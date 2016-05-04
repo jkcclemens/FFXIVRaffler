@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.HashMap
 import javax.swing.AbstractAction
 import javax.swing.JDialog
@@ -18,6 +20,7 @@ import javax.swing.JFrame
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
+import javax.swing.JOptionPane
 import javax.swing.KeyStroke
 import javax.swing.WindowConstants
 
@@ -70,16 +73,19 @@ object GUIUtils {
         return dialog
     }
 
-    fun showErrorDialog(t: Throwable): ErrorDialog {
-        val dialog = ErrorDialog(t)
-        this.showDialog(dialog)
-        return dialog
+    fun showErrorDialog(t: Throwable) {
+        val sw = StringWriter()
+        t.printStackTrace(PrintWriter(sw))
+        this.showErrorDialog(t.javaClass.simpleName, sw.toString())
     }
 
-    fun showErrorDialog(title: String, message: String): ErrorDialog {
-        val dialog = ErrorDialog(title, message)
-        this.showDialog(dialog)
-        return dialog
+    fun showErrorDialog(title: String, message: String) {
+        JOptionPane.showMessageDialog(
+            null,
+            message,
+            title,
+            JOptionPane.ERROR_MESSAGE
+        );
     }
 
 }
