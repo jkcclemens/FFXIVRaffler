@@ -72,12 +72,12 @@ fun main(args: Array<String>) {
         }
         osxHelper.callMethod("setQuitHandler", listOf(quitHandlerClass), quitHandler)
     }
-    val mainForm = Raffle()
+    val raffle = Raffle()
     GUIUtils.openWindow(
-        mainForm,
+        raffle,
         "FFXIV Raffler",
         { frame ->
-            val menuBar = GUIUtils.createMenuBar(frame)
+            val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.MAC) {
                 val applicationClass = Class.forName("com.apple.eawt.Application")
@@ -86,7 +86,7 @@ fun main(args: Array<String>) {
             }
             frame.addWindowListener(object : WindowAdapter() {
                 override fun windowOpened(e: WindowEvent) {
-                    mainForm.targetField.requestFocus()
+                    raffle.targetField.requestFocus()
                 }
 
                 override fun windowClosed(e: WindowEvent) {

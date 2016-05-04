@@ -5,14 +5,13 @@
  */
 package me.kyleclemens.ffxivraffler.gui
 
+import me.kyleclemens.ffxivraffler.extensions.toStackTraceString
 import java.awt.Dialog
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.util.HashMap
 import javax.swing.AbstractAction
 import javax.swing.JDialog
@@ -28,7 +27,7 @@ object GUIUtils {
 
     val openedFrames = HashMap<String, JFrame>()
 
-    fun createMenuBar(frame: JFrame): JMenuBar {
+    fun createMenuBar(frame: JFrame, raffle: Raffle): JMenuBar {
         val menuBar = JMenuBar()
         val fileMenu = JMenu("File")
         val closeItem = JMenuItem("Close")
@@ -42,7 +41,23 @@ object GUIUtils {
                 }
             }
         })
+        val randomNumberGeneratorItem = JMenuItem("Random number generator")
+        randomNumberGeneratorItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
+        randomNumberGeneratorItem.addActionListener(object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                if ("Random number generator" in this@GUIUtils.openedFrames) return
+                val randomForm = RandomForm(raffle)
+                GUIUtils.openWindow(randomForm, "Random number generator") {
+                    frame.addWindowListener(object : WindowAdapter() {
+                        override fun windowOpened(e: WindowEvent) {
+                            randomForm.rollAndInsertButton.requestFocus()
+                        }
+                    })
+                }
+            }
+        })
         fileMenu.add(closeItem)
+        fileMenu.add(randomNumberGeneratorItem)
         menuBar.add(fileMenu)
         return menuBar
     }
@@ -74,9 +89,7 @@ object GUIUtils {
     }
 
     fun showErrorDialog(t: Throwable) {
-        val sw = StringWriter()
-        t.printStackTrace(PrintWriter(sw))
-        this.showErrorDialog(t.javaClass.simpleName, sw.toString())
+        this.showErrorDialog(t.javaClass.simpleName, t.toStackTraceString())
     }
 
     fun showErrorDialog(title: String, message: String) {
