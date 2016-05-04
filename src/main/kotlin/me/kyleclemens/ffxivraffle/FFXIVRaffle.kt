@@ -7,6 +7,9 @@ package me.kyleclemens.ffxivraffle
 
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Proxy
+import javax.swing.JMenuBar
 import javax.swing.UIManager
 import javax.swing.UnsupportedLookAndFeelException
 import javax.swing.WindowConstants
@@ -48,49 +51,54 @@ fun main(args: Array<String>) {
     val os = FFXIVRaffle.getOS()
     if (os == OS.MAC) {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
-
-        /*val applicationClass = Class.forName("com.apple.eawt.Application")
-        val application = applicationClass.getDeclaredMethod("getApplication").invoke(null)
-        application.javaClass.getDeclaredMethod("addAppEventListener", Class.forName("com.apple.eawt.AppEventListener")).invoke(application)
-        application.addAppEventListener(com.apple.eawt.AppReOpenedListener {
-            val frame = GUIUtils.getOpenedFrames()["YouTube Playlist Manager"] ?: return@AppReOpenedListener
-            frame.pack()
-            frame.isVisible = true
+        val applicationClass = Class.forName("com.apple.eawt.Application")
+        val application = applicationClass.getDeclaredMethod("getApplication")(null)
+        val listenerClass = Class.forName("com.apple.eawt.AppReOpenedListener")
+        val listener = Proxy.newProxyInstance(listenerClass.classLoader, arrayOf(listenerClass), InvocationHandler { any, method, arrayOfAnys ->
+            if (method.name == "appReOpened") {
+                val frame = GUIUtils.getOpenedFrames()["FFXIV Raffler"] ?: return@InvocationHandler null
+                frame.pack()
+                frame.isVisible = true
+            }
+            return@InvocationHandler null
         })
-        //    val manageIDsForm = ManageIDsForm()
-        val app = Application.getApplication()
-        app.setQuitStrategy(com.apple.eawt.QuitStrategy.CLOSE_ALL_WINDOWS)
-        app.setQuitHandler { event, response ->
+        applicationClass.getDeclaredMethod("addAppEventListener", Class.forName("com.apple.eawt.AppEventListener"))(application, listener)
+        val quitStrategyClass = Class.forName("com.apple.eawt.QuitStrategy")
+        applicationClass.getDeclaredMethod("setQuitStrategy", quitStrategyClass)(application, quitStrategyClass.getDeclaredField("CLOSE_ALL_WINDOWS").get(null))
+        val quitHandlerClass = Class.forName("com.apple.eawt.QuitHandler")
+        val quitHandler = Proxy.newProxyInstance(quitHandlerClass.classLoader, arrayOf(quitHandlerClass), { any, method, arrayOfAnys ->
             FFXIVRaffle.cleanUp()
             System.exit(0)
-        }*/
+        })
+        applicationClass.getDeclaredMethod("setQuitHandler", quitHandlerClass)(application, quitHandler)
     }
     val mainForm = Raffle()
     GUIUtils.openWindow(
-            mainForm,
-            "FFXIV Raffler",
-            { frame ->
-                val menuBar = GUIUtils.createMenuBar(frame)
-                frame.jMenuBar = menuBar
-                /*if (os == OS.MAC) {
-                    val app = Application.getApplication()
-                    app.setDefaultMenuBar(menuBar)
-                }*/
-                frame.addWindowListener(object : WindowAdapter() {
-                    override fun windowOpened(e: WindowEvent) {
-                        //                    manageIDsForm.playlistIDField.requestFocus()
-                    }
+        mainForm,
+        "FFXIV Raffler",
+        { frame ->
+            val menuBar = GUIUtils.createMenuBar(frame)
+            frame.jMenuBar = menuBar
+            if (os == OS.MAC) {
+                val applicationClass = Class.forName("com.apple.eawt.Application")
+                val application = applicationClass.getDeclaredMethod("getApplication")(null)
+                applicationClass.getDeclaredMethod("setDefaultMenuBar", JMenuBar::class.java)(application, menuBar)
+            }
+            frame.addWindowListener(object : WindowAdapter() {
+                override fun windowOpened(e: WindowEvent) {
+                    //                    manageIDsForm.playlistIDField.requestFocus()
+                }
 
-                    override fun windowClosed(e: WindowEvent) {
-                        FFXIVRaffle.cleanUp()
-                    }
+                override fun windowClosed(e: WindowEvent) {
+                    FFXIVRaffle.cleanUp()
+                }
 
-                    override fun windowDeactivated(e: WindowEvent) {
-                        this.windowClosed(e)
-                    }
-                })
-            },
-            WindowConstants.HIDE_ON_CLOSE
+                override fun windowDeactivated(e: WindowEvent) {
+                    this.windowClosed(e)
+                }
+            })
+        },
+        WindowConstants.HIDE_ON_CLOSE
     )
 
 }
