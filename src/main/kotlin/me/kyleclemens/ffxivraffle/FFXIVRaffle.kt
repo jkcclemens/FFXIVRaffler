@@ -94,7 +94,9 @@ fun main(args: Array<String>) {
                 }
 
                 override fun windowDeactivated(e: WindowEvent) {
-                    this.windowClosed(e)
+                    if (os == OS.MAC) {
+                        this.windowClosed(e)
+                    }
                 }
             })
         },
