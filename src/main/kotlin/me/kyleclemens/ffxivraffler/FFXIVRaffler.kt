@@ -8,10 +8,9 @@ package me.kyleclemens.ffxivraffler
 import me.kyleclemens.ffxivraffler.gui.GUIUtils
 import me.kyleclemens.ffxivraffler.gui.Raffle
 import me.kyleclemens.ffxivraffler.util.OS
+import me.kyleclemens.ffxivraffler.util.os.OSXHelper
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.Proxy
 import javax.swing.JMenuBar
 import javax.swing.UIManager
 import javax.swing.UnsupportedLookAndFeelException
@@ -53,27 +52,25 @@ fun main(args: Array<String>) {
     }
     val os = FFXIVRaffler.getOS()
     if (os == OS.MAC) {
+        val osxHelper = OSXHelper()
         System.setProperty("apple.laf.useScreenMenuBar", "true")
-        val applicationClass = Class.forName("com.apple.eawt.Application")
-        val application = applicationClass.getDeclaredMethod("getApplication")(null)
-        val listenerClass = Class.forName("com.apple.eawt.AppReOpenedListener")
-        val listener = Proxy.newProxyInstance(listenerClass.classLoader, arrayOf(listenerClass), InvocationHandler { any, method, arrayOfAnys ->
+        val listener = osxHelper.proxyClass("com.apple.eawt.AppReOpenedListener") { any, method, arrayOfAnys ->
             if (method.name == "appReOpened") {
-                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return@InvocationHandler null
+                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return@proxyClass null
                 frame.pack()
                 frame.isVisible = true
             }
-            return@InvocationHandler null
-        })
-        applicationClass.getDeclaredMethod("addAppEventListener", Class.forName("com.apple.eawt.AppEventListener"))(application, listener)
-        val quitStrategyClass = Class.forName("com.apple.eawt.QuitStrategy")
-        applicationClass.getDeclaredMethod("setQuitStrategy", quitStrategyClass)(application, quitStrategyClass.getDeclaredField("CLOSE_ALL_WINDOWS").get(null))
-        val quitHandlerClass = Class.forName("com.apple.eawt.QuitHandler")
-        val quitHandler = Proxy.newProxyInstance(quitHandlerClass.classLoader, arrayOf(quitHandlerClass), { any, method, arrayOfAnys ->
+            return@proxyClass null
+        }
+        osxHelper.callMethod("addAppEventListener", listOf("com.apple.eawt.AppEventListener"), listener)
+        val quitStrategyClass = "com.apple.eawt.QuitStrategy"
+        osxHelper.callMethod("setQuitStrategy", listOf(quitStrategyClass), Class.forName(quitStrategyClass).getDeclaredField("CLOSE_ALL_WINDOWS").get(null))
+        val quitHandlerClass = "com.apple.eawt.QuitHandler"
+        val quitHandler = osxHelper.proxyClass(quitHandlerClass) { any, method, arrayOfAnys ->
             FFXIVRaffler.cleanUp()
             System.exit(0)
-        })
-        applicationClass.getDeclaredMethod("setQuitHandler", quitHandlerClass)(application, quitHandler)
+        }
+        osxHelper.callMethod("setQuitHandler", listOf(quitHandlerClass), quitHandler)
     }
     val mainForm = Raffle()
     GUIUtils.openWindow(
