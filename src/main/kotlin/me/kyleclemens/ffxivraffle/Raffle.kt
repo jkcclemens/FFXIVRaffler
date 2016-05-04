@@ -6,8 +6,8 @@
 package me.kyleclemens.ffxivraffle
 
 import me.kyleclemens.ffxivraffle.log.paste.LogParser
+import me.kyleclemens.ffxivraffle.util.DefaultKeyListener
 import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JPanel
@@ -28,18 +28,11 @@ class Raffle : WithMainPanel {
 
     init {
         this.processButton.addActionListener { this.processLog() }
-        this.targetField.addKeyListener(object : KeyListener {
-            override fun keyTyped(e: KeyEvent?) {
-            }
-
+        this.targetField.addKeyListener(object : DefaultKeyListener() {
             override fun keyPressed(e: KeyEvent?) {
                 if (e == null || e.keyCode != KeyEvent.VK_ENTER) return
                 this@Raffle.processLog()
             }
-
-            override fun keyReleased(e: KeyEvent?) {
-            }
-
         })
         this.winnersTextPane.isOpaque = false
     }
