@@ -86,7 +86,7 @@ fun main(args: Array<String>) {
             }
             frame.addWindowListener(object : WindowAdapter() {
                 override fun windowOpened(e: WindowEvent) {
-                    //                    manageIDsForm.playlistIDField.requestFocus()
+                    mainForm.targetField.requestFocus()
                 }
 
                 override fun windowClosed(e: WindowEvent) {
