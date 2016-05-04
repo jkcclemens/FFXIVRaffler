@@ -56,7 +56,7 @@ fun main(args: Array<String>) {
         val listenerClass = Class.forName("com.apple.eawt.AppReOpenedListener")
         val listener = Proxy.newProxyInstance(listenerClass.classLoader, arrayOf(listenerClass), InvocationHandler { any, method, arrayOfAnys ->
             if (method.name == "appReOpened") {
-                val frame = GUIUtils.getOpenedFrames()["FFXIV Raffler"] ?: return@InvocationHandler null
+                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return@InvocationHandler null
                 frame.pack()
                 frame.isVisible = true
             }

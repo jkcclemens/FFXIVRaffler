@@ -15,6 +15,8 @@ import javax.swing.JTextPane
 
 class Raffle : WithMainPanel {
 
+    override val mainPanel: JPanel
+        get() = this.rafflePanel
     lateinit var rafflePanel: JPanel
     lateinit var logTextArea: JTextArea
     lateinit var processButton: JButton
@@ -42,10 +44,6 @@ class Raffle : WithMainPanel {
         val parser = LogParser(log)
         val rolls = parser.parse()
         this.winnersTextPane.text = rolls.getWinnersFor(target).joinToString("\n")
-    }
-
-    override fun getMainPanel(): JPanel {
-        return this.rafflePanel
     }
 
 }

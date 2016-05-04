@@ -23,7 +23,7 @@ import javax.swing.WindowConstants
 
 object GUIUtils {
 
-    private val openedFrames = HashMap<String, JFrame>()
+    val openedFrames = HashMap<String, JFrame>()
 
     fun createMenuBar(frame: JFrame): JMenuBar {
         val menuBar = JMenuBar()
@@ -44,16 +44,12 @@ object GUIUtils {
         return menuBar
     }
 
-    fun getOpenedFrames(): MutableMap<String, JFrame> {
-        return this.openedFrames
-    }
-
     fun openWindow(wmp: WithMainPanel, frameName: String, run: (JFrame) -> Unit, onClose: Int): JFrame {
         val frame = JFrame(frameName)
-        this.getOpenedFrames().put(frameName, frame)
+        this.openedFrames[frameName] = frame
         frame.addWindowListener(object : WindowAdapter() {
             override fun windowClosed(e: WindowEvent?) {
-                getOpenedFrames().remove(frameName)
+                this@GUIUtils.openedFrames.remove(frameName)
             }
         })
         run(frame)
@@ -65,7 +61,7 @@ object GUIUtils {
     }
 
     fun openWindow(wmp: WithMainPanel, frameName: String, run: (JFrame) -> Unit): JFrame {
-        return openWindow(wmp, frameName, run, WindowConstants.DISPOSE_ON_CLOSE)
+        return this.openWindow(wmp, frameName, run, WindowConstants.DISPOSE_ON_CLOSE)
     }
 
     fun showDialog(dialog: JDialog): Dialog {
@@ -76,13 +72,13 @@ object GUIUtils {
 
     fun showErrorDialog(t: Throwable): ErrorDialog {
         val dialog = ErrorDialog(t)
-        showDialog(dialog)
+        this.showDialog(dialog)
         return dialog
     }
 
     fun showErrorDialog(title: String, message: String): ErrorDialog {
         val dialog = ErrorDialog(title, message)
-        showDialog(dialog)
+        this.showDialog(dialog)
         return dialog
     }
 
