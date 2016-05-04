@@ -8,7 +8,7 @@ package me.kyleclemens.ffxivraffle.log
 class LogParser(val rawLog: String) {
 
     companion object {
-        val randomRegex = Regex("Random! ([\\w ']+) rolled (\\d+)!")
+        val randomRegex = Regex("(?:\\[\\d{1,2}:\\d{1,2}\\])?Random! ([\\w ']+) rolls a (\\d+).")
         val newlineRegex = Regex("\r?\n")
     }
 

@@ -37,7 +37,7 @@ class Raffle : WithMainPanel {
             }
         var log = this.logTextArea.text
         if (this.selfRollsCheckbox.isSelected) {
-            log = log.replace("You roll", "You rolled")
+            log = log.replace("You roll", "You rolls")
         }
         val parser = LogParser(log)
         val rolls = parser.parse()
