@@ -5,15 +5,13 @@
  */
 package me.kyleclemens.ffxivraffler.log.paste
 
-class RaffleMap<K, V>(val map: MutableMap<K, V>) : MutableMap<K, V> by map {
+class RaffleMap<K, V>(private val map: MutableMap<K, V>) : MutableMap<K, V> by map {
 
     override fun put(key: K, value: V): V? {
         if (key in this.map) return this.map[key]
         return this.map.put(key, value)
     }
 
-    override fun toString(): String {
-        return this.map.toString()
-    }
+    override fun toString() = this.map.toString()
 
 }
