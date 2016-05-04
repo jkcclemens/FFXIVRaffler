@@ -5,7 +5,7 @@
  */
 package me.kyleclemens.ffxivraffle
 
-import me.kyleclemens.ffxivraffle.log.LogParser
+import me.kyleclemens.ffxivraffle.log.paste.LogParser
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JPanel
