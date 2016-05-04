@@ -10,7 +10,8 @@ import kotlin.test.assertEquals
 
 class RaffleMapSpec : Spek({
     given("an empty raffle map of strings to integers") {
-        val raffleMap = RaffleMap(hashMapOf<String, Int>())
+        val backingMap = hashMapOf<String, Int>()
+        val raffleMap = RaffleMap(backingMap)
         on("adding a pair") {
             beforeEach {
                 raffleMap.clear()
@@ -57,6 +58,13 @@ class RaffleMapSpec : Spek({
             }
             it("should still contain the second pair") {
                 assertEquals(2, raffleMap["b"])
+            }
+        }
+        on("converting to a string") {
+            val backingString = backingMap.toString()
+            val string = raffleMap.toString()
+            it("should be the same as the underlying map") {
+                assertEquals(backingString, string)
             }
         }
     }
