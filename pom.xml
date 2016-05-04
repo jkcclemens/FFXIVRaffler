@@ -74,7 +74,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>me.kyleclemens.ffxivraffle.FFXIVRaffleKt</mainClass>
+                            <mainClass>me.kyleclemens.ffxivraffler.FFXIVRafflerKt</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -3,8 +3,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package me.kyleclemens.ffxivraffle
+package me.kyleclemens.ffxivraffler.gui
 
+import me.kyleclemens.ffxivraffler.gui.WithMainPanel
 import java.awt.Dialog
 import java.awt.Toolkit
 import java.awt.event.ActionEvent

@@ -3,10 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package me.kyleclemens.ffxivraffle
+package me.kyleclemens.ffxivraffler.gui
 
-import me.kyleclemens.ffxivraffle.log.paste.LogParser
-import me.kyleclemens.ffxivraffle.util.DefaultKeyListener
+import me.kyleclemens.ffxivraffler.gui.GUIUtils
+import me.kyleclemens.ffxivraffler.gui.WithMainPanel
+import me.kyleclemens.ffxivraffler.log.paste.LogParser
+import me.kyleclemens.ffxivraffler.util.DefaultKeyListener
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JCheckBox

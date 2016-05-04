@@ -3,8 +3,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package me.kyleclemens.ffxivraffle
+package me.kyleclemens.ffxivraffler
 
+import me.kyleclemens.ffxivraffler.gui.GUIUtils
+import me.kyleclemens.ffxivraffler.gui.Raffle
+import me.kyleclemens.ffxivraffler.util.OS
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.lang.reflect.InvocationHandler
@@ -14,10 +17,10 @@ import javax.swing.UIManager
 import javax.swing.UnsupportedLookAndFeelException
 import javax.swing.WindowConstants
 
-class FFXIVRaffle {
+class FFXIVRaffler {
     companion object {
         fun cleanUp() {
-            if (FFXIVRaffle.getOS() != OS.MAC) {
+            if (FFXIVRaffler.getOS() != OS.MAC) {
                 System.exit(0)
             }
         }
@@ -48,7 +51,7 @@ fun main(args: Array<String>) {
     } catch (e: IllegalAccessException) {
         e.printStackTrace()
     }
-    val os = FFXIVRaffle.getOS()
+    val os = FFXIVRaffler.getOS()
     if (os == OS.MAC) {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
         val applicationClass = Class.forName("com.apple.eawt.Application")
@@ -67,7 +70,7 @@ fun main(args: Array<String>) {
         applicationClass.getDeclaredMethod("setQuitStrategy", quitStrategyClass)(application, quitStrategyClass.getDeclaredField("CLOSE_ALL_WINDOWS").get(null))
         val quitHandlerClass = Class.forName("com.apple.eawt.QuitHandler")
         val quitHandler = Proxy.newProxyInstance(quitHandlerClass.classLoader, arrayOf(quitHandlerClass), { any, method, arrayOfAnys ->
-            FFXIVRaffle.cleanUp()
+            FFXIVRaffler.cleanUp()
             System.exit(0)
         })
         applicationClass.getDeclaredMethod("setQuitHandler", quitHandlerClass)(application, quitHandler)
@@ -90,7 +93,7 @@ fun main(args: Array<String>) {
                 }
 
                 override fun windowClosed(e: WindowEvent) {
-                    FFXIVRaffle.cleanUp()
+                    FFXIVRaffler.cleanUp()
                 }
 
                 override fun windowDeactivated(e: WindowEvent) {
