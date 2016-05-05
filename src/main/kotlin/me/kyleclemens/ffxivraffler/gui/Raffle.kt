@@ -6,7 +6,7 @@
 package me.kyleclemens.ffxivraffler.gui
 
 import me.kyleclemens.ffxivraffler.log.paste.LogParser
-import me.kyleclemens.ffxivraffler.util.DefaultKeyListener
+import me.kyleclemens.ffxivraffler.util.listeners.DefaultKeyListener
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JCheckBox
