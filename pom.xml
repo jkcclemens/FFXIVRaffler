@@ -13,7 +13,7 @@
     <name>FFXIV Raffler Parent</name>
 
     <modules>
-        <module>osxhelper</module>
-        <module>ffxivraffler</module>
+        <module>OSXHelper</module>
+        <module>FFXIVRaffler</module>
     </modules>
 </project>
