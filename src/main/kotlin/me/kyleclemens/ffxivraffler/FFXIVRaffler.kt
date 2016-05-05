@@ -9,6 +9,7 @@ import me.kyleclemens.ffxivraffler.gui.GUIUtils
 import me.kyleclemens.ffxivraffler.gui.Raffle
 import me.kyleclemens.ffxivraffler.util.OS
 import me.kyleclemens.ffxivraffler.util.os.OSXHelper
+import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JMenuBar
@@ -77,6 +78,7 @@ fun main(args: Array<String>) {
         raffle,
         "FFXIV Raffler",
         { frame ->
+            frame.minimumSize = Dimension(526, 638)
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.MAC) {
