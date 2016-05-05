@@ -52,8 +52,8 @@ fun main(args: Array<String>) {
         e.printStackTrace()
     }
     val os = FFXIVRaffler.getOS()
+    val osxHelper = OSXHelper()
     if (os == OS.MAC) {
-        val osxHelper = OSXHelper()
         System.setProperty("apple.laf.useScreenMenuBar", "true")
         val listener = osxHelper.proxyClass("com.apple.eawt.AppReOpenedListener") { any, method, arrayOfAnys ->
             if (method.name == "appReOpened") {
@@ -81,9 +81,7 @@ fun main(args: Array<String>) {
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.MAC) {
-                val applicationClass = Class.forName("com.apple.eawt.Application")
-                val application = applicationClass.getDeclaredMethod("getApplication")(null)
-                applicationClass.getDeclaredMethod("setDefaultMenuBar", JMenuBar::class.java)(application, menuBar)
+                osxHelper.callMethod("setDefaultMenuBar", listOf(JMenuBar::class.java.canonicalName), menuBar)
             }
             frame.addWindowListener(object : WindowAdapter() {
                 override fun windowOpened(e: WindowEvent) {

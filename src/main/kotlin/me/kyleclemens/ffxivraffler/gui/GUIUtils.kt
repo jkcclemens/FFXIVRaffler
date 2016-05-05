@@ -30,7 +30,43 @@ import javax.swing.WindowConstants
 
 object GUIUtils {
 
+    private var _defaultMenuBar: JMenuBar? = null
+    val defaultMenuBar: JMenuBar
+        get() {
+            if (this._defaultMenuBar == null) {
+                throw IllegalStateException("Default menu bar not yet initialized")
+            }
+            return this._defaultMenuBar ?: throw IllegalStateException("Another thread set to null")
+        }
     val openedFrames = HashMap<String, JFrame>()
+
+    fun createMenuBar(frame: JFrame, raffle: Raffle): JMenuBar {
+        val menuBar = JMenuBar()
+        val fileMenu = JMenu("File")
+        val closeItem = JMenuItem("Close")
+        closeItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
+        closeItem.addActionListener(object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                if (frame.defaultCloseOperation == WindowConstants.HIDE_ON_CLOSE) {
+                    frame.isVisible = false
+                } else {
+                    frame.dispose()
+                }
+            }
+        })
+        val randomNumberGeneratorItem = JMenuItem("Random number generator")
+        randomNumberGeneratorItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
+        randomNumberGeneratorItem.addActionListener(object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                this@GUIUtils.createRandomNumberWindow(raffle)
+            }
+        })
+        fileMenu.add(closeItem)
+        fileMenu.add(randomNumberGeneratorItem)
+        menuBar.add(fileMenu)
+        this._defaultMenuBar = menuBar
+        return menuBar
+    }
 
     fun createRandomNumberWindow(raffle: Raffle) {
         val randomForm = RandomForm(raffle)
@@ -67,43 +103,23 @@ object GUIUtils {
                 })
                 val pane = frame.rootPane
                 pane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+                pane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().menuShortcutKeyMask), "CtrlR")
                 pane.actionMap.put("Escape", object : AbstractAction() {
                     override fun actionPerformed(e: ActionEvent) {
                         if (frame.defaultCloseOperation == WindowConstants.HIDE_ON_CLOSE) {
-                            frame.isVisible = false;
+                            frame.isVisible = false
                         } else {
-                            frame.dispose();
+                            frame.dispose()
                         }
                     }
-                });
-            })
-    }
+                })
+                pane.actionMap.put("CtrlR", object : AbstractAction() {
+                    override fun actionPerformed(e: ActionEvent) {
+                        raffleFrame.toFront()
+                    }
 
-    fun createMenuBar(frame: JFrame, raffle: Raffle): JMenuBar {
-        val menuBar = JMenuBar()
-        val fileMenu = JMenu("File")
-        val closeItem = JMenuItem("Close")
-        closeItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
-        closeItem.addActionListener(object : AbstractAction() {
-            override fun actionPerformed(e: ActionEvent) {
-                if (frame.defaultCloseOperation == WindowConstants.HIDE_ON_CLOSE) {
-                    frame.isVisible = false
-                } else {
-                    frame.dispose()
-                }
-            }
-        })
-        val randomNumberGeneratorItem = JMenuItem("Random number generator")
-        randomNumberGeneratorItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
-        randomNumberGeneratorItem.addActionListener(object : AbstractAction() {
-            override fun actionPerformed(e: ActionEvent) {
-                this@GUIUtils.createRandomNumberWindow(raffle)
-            }
-        })
-        fileMenu.add(closeItem)
-        fileMenu.add(randomNumberGeneratorItem)
-        menuBar.add(fileMenu)
-        return menuBar
+                })
+            })
     }
 
     fun openWindow(wmp: WithMainPanel, frameName: String, run: (JFrame) -> Unit, onClose: Int, beforeVisible: ((JFrame) -> Unit)? = null): JFrame {
@@ -118,7 +134,9 @@ object GUIUtils {
         frame.contentPane = wmp.mainPanel
         frame.defaultCloseOperation = onClose
         frame.pack()
-        if (beforeVisible != null) beforeVisible(frame)
+        if (beforeVisible != null) {
+            beforeVisible(frame)
+        }
         frame.isVisible = true
         return frame
     }
