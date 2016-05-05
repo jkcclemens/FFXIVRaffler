@@ -9,15 +9,15 @@ import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 
 abstract class DefaultComponentListener : ComponentListener {
-    override fun componentResized(e: ComponentEvent?) {
+    override fun componentResized(e: ComponentEvent) {
     }
 
-    override fun componentShown(e: ComponentEvent?) {
+    override fun componentShown(e: ComponentEvent) {
     }
 
-    override fun componentHidden(e: ComponentEvent?) {
+    override fun componentHidden(e: ComponentEvent) {
     }
 
-    override fun componentMoved(e: ComponentEvent?) {
+    override fun componentMoved(e: ComponentEvent) {
     }
 }

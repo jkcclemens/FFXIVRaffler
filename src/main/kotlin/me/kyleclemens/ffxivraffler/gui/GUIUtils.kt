@@ -6,7 +6,7 @@
 package me.kyleclemens.ffxivraffler.gui
 
 import me.kyleclemens.ffxivraffler.extensions.toStackTraceString
-import me.kyleclemens.ffxivraffler.util.listeners.DefaultComponentListener
+import me.kyleclemens.ffxivraffler.util.listeners.DockedComponentListener
 import java.awt.Dialog
 import java.awt.Point
 import java.awt.Toolkit
@@ -45,8 +45,8 @@ object GUIUtils {
             beforeVisible = { it.location = Point(raffleFrame.x + raffleFrame.width, raffleFrame.y) },
             run = { frame ->
                 frame.isResizable = false
-                val raffleComponentListener = object : DefaultComponentListener() {
-                    override fun componentMoved(e: ComponentEvent?) {
+                val raffleComponentListener = object : DockedComponentListener() {
+                    override fun componentMovedOrResized(e: ComponentEvent) {
                         frame.location = Point(raffleFrame.x + raffleFrame.width, raffleFrame.y)
                     }
                 }
@@ -60,8 +60,8 @@ object GUIUtils {
                         raffleFrame.removeComponentListener(raffleComponentListener)
                     }
                 })
-                frame.addComponentListener(object : DefaultComponentListener() {
-                    override fun componentMoved(e: ComponentEvent?) {
+                frame.addComponentListener(object : DockedComponentListener() {
+                    override fun componentMovedOrResized(e: ComponentEvent) {
                         raffleFrame.location = Point(frame.x - raffleFrame.width, frame.y)
                     }
                 })
