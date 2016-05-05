@@ -78,7 +78,6 @@ fun main(args: Array<String>) {
         raffle,
         "FFXIV Raffler",
         { frame ->
-            frame.minimumSize = Dimension(526, 638)
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.MAC) {
@@ -102,7 +101,8 @@ fun main(args: Array<String>) {
                 }
             })
         },
-        WindowConstants.HIDE_ON_CLOSE
+        WindowConstants.HIDE_ON_CLOSE,
+        { it.minimumSize = Dimension(it.width, it.height) }
     )
 
 }
