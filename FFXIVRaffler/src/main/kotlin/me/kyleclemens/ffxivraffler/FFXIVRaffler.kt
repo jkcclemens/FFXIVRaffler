@@ -8,11 +8,16 @@ package me.kyleclemens.ffxivraffler
 import me.kyleclemens.ffxivraffler.gui.GUIUtils
 import me.kyleclemens.ffxivraffler.gui.Raffle
 import me.kyleclemens.ffxivraffler.util.OS
-import me.kyleclemens.ffxivraffler.util.os.OSXHelper
+import me.kyleclemens.osx.HelperApplication
+import me.kyleclemens.osx.HelperQuitResponse
+import me.kyleclemens.osx.HelperQuitStrategy
+import me.kyleclemens.osx.events.HelperAppReOpenedEvent
+import me.kyleclemens.osx.events.HelperQuitEvent
+import me.kyleclemens.osx.handlers.HelperQuitHandler
+import me.kyleclemens.osx.listeners.HelperAppReOpenedListener
 import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import javax.swing.JMenuBar
 import javax.swing.UIManager
 import javax.swing.UnsupportedLookAndFeelException
 import javax.swing.WindowConstants
@@ -52,26 +57,23 @@ fun main(args: Array<String>) {
         e.printStackTrace()
     }
     val os = FFXIVRaffler.getOS()
-    val osxHelper = OSXHelper()
+    val osxApplication = HelperApplication()
     if (os == OS.MAC) {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
-        val listener = osxHelper.proxyClass("com.apple.eawt.AppReOpenedListener") { any, method, arrayOfAnys ->
-            if (method.name == "appReOpened") {
-                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return@proxyClass null
+        osxApplication.addAppEventListener(object : HelperAppReOpenedListener {
+            override fun appReOpened(event: HelperAppReOpenedEvent) {
+                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return
                 frame.pack()
                 frame.isVisible = true
             }
-            return@proxyClass null
-        }
-        osxHelper.callMethod("addAppEventListener", listOf("com.apple.eawt.AppEventListener"), listener)
-        val quitStrategyClass = "com.apple.eawt.QuitStrategy"
-        osxHelper.callMethod("setQuitStrategy", listOf(quitStrategyClass), Class.forName(quitStrategyClass).getDeclaredField("CLOSE_ALL_WINDOWS").get(null))
-        val quitHandlerClass = "com.apple.eawt.QuitHandler"
-        val quitHandler = osxHelper.proxyClass(quitHandlerClass) { any, method, arrayOfAnys ->
-            FFXIVRaffler.cleanUp()
-            System.exit(0)
-        }
-        osxHelper.callMethod("setQuitHandler", listOf(quitHandlerClass), quitHandler)
+        })
+        osxApplication.setQuitStrategy(HelperQuitStrategy.CLOSE_ALL_WINDOWS)
+        osxApplication.setQuitHandler(object : HelperQuitHandler {
+            override fun handleQuitRequestWith(event: HelperQuitEvent, response: HelperQuitResponse) {
+                FFXIVRaffler.cleanUp()
+                System.exit(0)
+            }
+        })
     }
     val raffle = Raffle()
     GUIUtils.openWindow(
@@ -81,7 +83,7 @@ fun main(args: Array<String>) {
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.MAC) {
-                osxHelper.callMethod("setDefaultMenuBar", listOf(JMenuBar::class.java.canonicalName), menuBar)
+                osxApplication.setDefaultMenuBar(menuBar)
             }
             frame.addWindowListener(object : WindowAdapter() {
                 override fun windowOpened(e: WindowEvent) {

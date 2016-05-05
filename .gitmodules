@@ -1,0 +1,3 @@
+[submodule "OSXHelper"]
+	path = OSXHelper
+	url = https://github.com/jkcclemens/OSXHelper
