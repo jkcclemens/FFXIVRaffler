@@ -6,7 +6,7 @@
 package me.kyleclemens.ffxivraffler.util
 
 enum class OS {
-    MAC,
+    OS_X,
     LINUX,
     WINDOWS,
     OTHER

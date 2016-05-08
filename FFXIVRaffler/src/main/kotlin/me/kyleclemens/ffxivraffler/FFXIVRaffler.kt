@@ -25,7 +25,7 @@ import javax.swing.WindowConstants
 class FFXIVRaffler {
     companion object {
         fun cleanUp() {
-            if (FFXIVRaffler.getOS() != OS.MAC) {
+            if (FFXIVRaffler.getOS() != OS.OS_X) {
                 System.exit(0)
             }
         }
@@ -33,7 +33,7 @@ class FFXIVRaffler {
         fun getOS(): OS {
             return with(System.getProperty("os.name").toLowerCase()) {
                 when {
-                    this.contains("mac") -> OS.MAC
+                    this.contains("mac") -> OS.OS_X
                     this.contains("linux") -> OS.LINUX
                     this.contains("windows") -> OS.WINDOWS
                     else -> OS.OTHER
@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
         e.printStackTrace()
     }
     val os = FFXIVRaffler.getOS()
-    if (os == OS.MAC) {
+    if (os == OS.OS_X) {
         val osxApplication = HelperApplication()
         System.setProperty("apple.laf.useScreenMenuBar", "true")
         osxApplication.addAppEventListener(object : HelperAppReOpenedListener {
@@ -82,7 +82,7 @@ fun main(args: Array<String>) {
         { frame ->
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
-            if (os == OS.MAC) {
+            if (os == OS.OS_X) {
                 val osxApplication = HelperApplication()
                 osxApplication.setDefaultMenuBar(menuBar)
             }
@@ -96,7 +96,7 @@ fun main(args: Array<String>) {
                 }
 
                 override fun windowDeactivated(e: WindowEvent) {
-                    if (os == OS.MAC) {
+                    if (os == OS.OS_X) {
                         this.windowClosed(e)
                     }
                 }
