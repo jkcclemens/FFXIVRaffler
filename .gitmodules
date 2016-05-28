@@ -1,3 +1,6 @@
 [submodule "OSXHelper"]
 	path = OSXHelper
 	url = https://github.com/jkcclemens/OSXHelper
+[submodule "FFXIVLogLib"]
+	path = FFXIVLogLib
+	url = https://github.com/jkcclemens/FFXIVLogLib

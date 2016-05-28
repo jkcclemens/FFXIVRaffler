@@ -14,6 +14,7 @@
 
     <modules>
         <module>OSXHelper</module>
+        <module>FFXIVLogLib</module>
         <module>FFXIVRaffler</module>
     </modules>
 </project>
