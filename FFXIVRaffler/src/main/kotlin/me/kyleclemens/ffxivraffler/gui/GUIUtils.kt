@@ -5,9 +5,9 @@
  */
 package me.kyleclemens.ffxivraffler.gui
 
-import me.kyleclemens.ffxivraffler.extensions.toStackTraceString
+import me.kyleclemens.ffxivraffler.extensions.openAsFrame
+import me.kyleclemens.ffxivraffler.extensions.openedFrames
 import me.kyleclemens.ffxivraffler.util.listeners.DockedComponentListener
-import java.awt.Dialog
 import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
@@ -15,10 +15,8 @@ import java.awt.event.ComponentEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.util.HashMap
 import javax.swing.AbstractAction
 import javax.swing.JComponent
-import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JMenu
 import javax.swing.JMenuBar
@@ -38,7 +36,6 @@ object GUIUtils {
             }
             return this._defaultMenuBar ?: throw IllegalStateException("Another thread set to null")
         }
-    val openedFrames = HashMap<String, JFrame>()
 
     fun createMenuBar(frame: JFrame, raffle: Raffle): JMenuBar {
         val menuBar = JMenuBar()
@@ -71,12 +68,11 @@ object GUIUtils {
     fun createRandomNumberWindow(raffle: Raffle) {
         val randomForm = RandomForm(raffle)
         val raffleFrame = SwingUtilities.getWindowAncestor(raffle.mainPanel) as JFrame
-        if ("Random number generator" in this@GUIUtils.openedFrames) {
-            this@GUIUtils.openedFrames["Random number generator"]!!.toFront()
+        if ("Random number generator" in openedFrames) {
+            openedFrames["Random number generator"]!!.toFront()
             return
         }
-        GUIUtils.openWindow(
-            randomForm,
+        randomForm.openAsFrame(
             "Random number generator",
             beforeVisible = { it.location = Point(raffleFrame.x + raffleFrame.width, raffleFrame.y) },
             run = { frame ->
@@ -120,39 +116,6 @@ object GUIUtils {
 
                 })
             })
-    }
-
-    fun openWindow(wmp: WithMainPanel, frameName: String, run: (JFrame) -> Unit, onClose: Int, beforeVisible: ((JFrame) -> Unit)? = null): JFrame {
-        val frame = JFrame(frameName)
-        this.openedFrames[frameName] = frame
-        frame.addWindowListener(object : WindowAdapter() {
-            override fun windowClosed(e: WindowEvent?) {
-                this@GUIUtils.openedFrames.remove(frameName)
-            }
-        })
-        run(frame)
-        frame.contentPane = wmp.mainPanel
-        frame.defaultCloseOperation = onClose
-        frame.pack()
-        if (beforeVisible != null) {
-            beforeVisible(frame)
-        }
-        frame.isVisible = true
-        return frame
-    }
-
-    fun openWindow(wmp: WithMainPanel, frameName: String, run: (JFrame) -> Unit, beforeVisible: ((JFrame) -> Unit)? = null): JFrame {
-        return this.openWindow(wmp, frameName, run, WindowConstants.DISPOSE_ON_CLOSE, beforeVisible)
-    }
-
-    fun showDialog(dialog: JDialog): Dialog {
-        dialog.pack()
-        dialog.isVisible = true
-        return dialog
-    }
-
-    fun showErrorDialog(t: Throwable) {
-        this.showErrorDialog(t.javaClass.simpleName, t.toStackTraceString())
     }
 
     fun showErrorDialog(title: String, message: String) {

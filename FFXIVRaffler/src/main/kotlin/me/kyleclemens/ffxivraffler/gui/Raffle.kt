@@ -37,6 +37,7 @@ import javax.swing.JSeparator
 import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.JTextPane
+import javax.swing.SwingUtilities
 
 class Raffle : WithMainPanel {
 
@@ -97,7 +98,7 @@ class Raffle : WithMainPanel {
     val updaterThread: LogUpdaterThread
 
     private val frame: JFrame
-        get() = GUIUtils.openedFrames["FFXIV Raffler"]!!
+        get() = SwingUtilities.getWindowAncestor(this.mainPanel) as JFrame
 
     private enum class Method(val optionString: String) {
         PASTE("Paste (Manual)"),
@@ -170,10 +171,7 @@ class Raffle : WithMainPanel {
             .forEach { this.adjustComponent(it, method != Method.PASTE) }
         this.enableComponent(this.methodPanels[method]!!)
         this.methodPanels.filter { it.key != method }.forEach { this.disableComponent(it.value) }
-        val frame = GUIUtils.openedFrames["FFXIV Raffler"]
-        if (frame != null) {
-            this.repack()
-        }
+        this.repack()
     }
 
     private fun enableComponent(component: Component) = this.adjustComponent(component, true)

@@ -5,6 +5,8 @@
  */
 package me.kyleclemens.ffxivraffler
 
+import me.kyleclemens.ffxivraffler.extensions.openAsFrame
+import me.kyleclemens.ffxivraffler.extensions.openedFrames
 import me.kyleclemens.ffxivraffler.gui.GUIUtils
 import me.kyleclemens.ffxivraffler.gui.Raffle
 import me.kyleclemens.ffxivraffler.util.OS
@@ -62,7 +64,7 @@ fun main(args: Array<String>) {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
         osxApplication.addAppEventListener(object : HelperAppReOpenedListener {
             override fun appReOpened(event: HelperAppReOpenedEvent) {
-                val frame = GUIUtils.openedFrames["FFXIV Raffler"] ?: return
+                val frame = openedFrames["FFXIV Raffler"] ?: return
                 frame.pack()
                 frame.isVisible = true
             }
@@ -76,8 +78,7 @@ fun main(args: Array<String>) {
         })
     }
     val raffle = Raffle()
-    GUIUtils.openWindow(
-        raffle,
+    raffle.openAsFrame(
         "FFXIV Raffler",
         { frame ->
             frame.isResizable = false
