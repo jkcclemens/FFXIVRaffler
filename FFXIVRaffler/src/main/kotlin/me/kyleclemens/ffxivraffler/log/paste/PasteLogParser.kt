@@ -5,7 +5,7 @@
  */
 package me.kyleclemens.ffxivraffler.log.paste
 
-class LogParser(val rawLog: String) {
+class PasteLogParser(val rawLog: String) {
 
     companion object {
         val randomRegex = Regex("(?:\\[\\d{1,2}:\\d{1,2}\\])?Random! ([\\w ']+) rolls a (\\d+).")
@@ -15,8 +15,8 @@ class LogParser(val rawLog: String) {
     fun parse(): Rolls {
         val map = RaffleMap(hashMapOf<String, Int>())
         this.rawLog
-            .split(LogParser.newlineRegex)
-            .map { LogParser.randomRegex.find(it) }
+            .split(PasteLogParser.newlineRegex)
+            .map { PasteLogParser.randomRegex.find(it) }
             .filterNotNull()
             .associateTo(map) { it.groupValues[1] to it.groupValues[2].toInt() }
         return Rolls(map)

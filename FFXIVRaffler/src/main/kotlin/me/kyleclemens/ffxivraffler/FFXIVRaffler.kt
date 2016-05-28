@@ -80,6 +80,7 @@ fun main(args: Array<String>) {
         raffle,
         "FFXIV Raffler",
         { frame ->
+            frame.isResizable = false
             val menuBar = GUIUtils.createMenuBar(frame, raffle)
             frame.jMenuBar = menuBar
             if (os == OS.OS_X) {
