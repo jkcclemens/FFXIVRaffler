@@ -15,6 +15,7 @@ import me.kyleclemens.ffxivloglib.message.parts.NamePart
 import me.kyleclemens.ffxivraffler.extensions.friendlyName
 import me.kyleclemens.ffxivraffler.extensions.toEnumName
 import me.kyleclemens.ffxivraffler.log.paste.PasteLogParser
+import me.kyleclemens.ffxivraffler.log.paste.RaffleMap
 import me.kyleclemens.ffxivraffler.log.paste.Rolls
 import me.kyleclemens.ffxivraffler.util.listeners.DefaultKeyListener
 import java.awt.Component
@@ -266,9 +267,10 @@ class Raffle : WithMainPanel {
                 this.winnersTextPane.text = Rolls(
                     raffle.entries
                         .filter { it.type == FFXIVEntryType.RANDOM }
-                        .associate {
+                        .map {
                             this.getNameFromRandomEntry(it).displayName to it.message.parts.last().displayText.split("\u0003")[1].replace(".", "").toInt() // FIXME
                         }
+                        .associateTo(RaffleMap(hashMapOf<String, Int>())) { it }
                         .filter {
                             if (!this.selfRollsCheckbox.isSelected && it.key == "You") false else true
                         }
