@@ -13,13 +13,13 @@ class PasteLogParser(val rawLog: String) {
     }
 
     fun parse(): Rolls {
-        val map = RaffleMap(hashMapOf<String, Int>())
-        this.rawLog
-            .split(PasteLogParser.newlineRegex)
-            .map { PasteLogParser.randomRegex.find(it) }
-            .filterNotNull()
-            .associateTo(map) { it.groupValues[1] to it.groupValues[2].toInt() }
-        return Rolls(map)
+        return Rolls(
+            this.rawLog
+                .split(PasteLogParser.newlineRegex)
+                .map { PasteLogParser.randomRegex.find(it) }
+                .filterNotNull()
+                .associateTo(RaffleMap(hashMapOf<String, Int>())) { it.groupValues[1] to it.groupValues[2].toInt() }
+        )
     }
 
 }
