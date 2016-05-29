@@ -114,6 +114,8 @@ class Raffle : WithMainPanel {
             Method.LOG to this.logPanel,
             Method.ACT to this.actPanel
         )
+        // Bottom setup
+        this.logScrollPane.border = null
         // Left-side setup
         with(this.winnersScrollPane) {
             this.viewport.isOpaque = false
