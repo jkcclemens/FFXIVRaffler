@@ -5,8 +5,6 @@
  */
 package me.kyleclemens.ffxivraffler.gui
 
-import me.kyleclemens.ffxivraffler.extensions.openAsFrame
-import me.kyleclemens.ffxivraffler.extensions.openedFrames
 import me.kyleclemens.ffxivraffler.util.listeners.DockedComponentListener
 import java.awt.Point
 import java.awt.Toolkit
@@ -68,8 +66,8 @@ object GUIUtils {
     fun createRandomNumberWindow(raffle: Raffle) {
         val randomForm = RandomForm(raffle)
         val raffleFrame = SwingUtilities.getWindowAncestor(raffle.mainPanel) as JFrame
-        if ("Random number generator" in openedFrames) {
-            openedFrames["Random number generator"]!!.toFront()
+        if ("Random number generator" in WithMainPanel.openedFrames) {
+            WithMainPanel.openedFrames["Random number generator"]!!.toFront()
             return
         }
         randomForm.openAsFrame(

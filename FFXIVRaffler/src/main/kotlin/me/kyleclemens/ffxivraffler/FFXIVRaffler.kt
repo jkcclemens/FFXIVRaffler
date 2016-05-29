@@ -5,10 +5,9 @@
  */
 package me.kyleclemens.ffxivraffler
 
-import me.kyleclemens.ffxivraffler.extensions.openAsFrame
-import me.kyleclemens.ffxivraffler.extensions.openedFrames
 import me.kyleclemens.ffxivraffler.gui.GUIUtils
 import me.kyleclemens.ffxivraffler.gui.Raffle
+import me.kyleclemens.ffxivraffler.gui.WithMainPanel
 import me.kyleclemens.ffxivraffler.util.OS
 import me.kyleclemens.osx.HelperApplication
 import me.kyleclemens.osx.HelperQuitResponse
@@ -64,7 +63,7 @@ fun main(args: Array<String>) {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
         osxApplication.addAppEventListener(object : HelperAppReOpenedListener {
             override fun appReOpened(event: HelperAppReOpenedEvent) {
-                val frame = openedFrames["FFXIV Raffler"] ?: return
+                val frame = WithMainPanel.openedFrames["FFXIV Raffler"] ?: return
                 frame.pack()
                 frame.isVisible = true
             }
