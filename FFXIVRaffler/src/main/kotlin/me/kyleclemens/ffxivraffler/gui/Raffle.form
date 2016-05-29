@@ -96,7 +96,9 @@
                   </component>
                   <scrollpane id="417ac" binding="winnersScrollPane">
                     <constraints>
-                      <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="64"/>
+                      </grid>
                     </constraints>
                     <properties>
                       <opaque value="false"/>
@@ -134,16 +136,23 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="c641f" class="javax.swing.JTextArea" binding="pasteTextArea">
+                  <scrollpane id="e2325" binding="pasteScrollPane">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                         <preferred-size width="450" height="300"/>
                       </grid>
                     </constraints>
-                    <properties>
-                      <text value="Paste here."/>
-                    </properties>
-                  </component>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="c641f" class="javax.swing.JTextArea" binding="pasteTextArea">
+                        <constraints/>
+                        <properties>
+                          <text value="Paste here."/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
               <grid id="9db91" binding="actPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

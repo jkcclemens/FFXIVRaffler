@@ -56,6 +56,7 @@ class Raffle : WithMainPanel {
     lateinit var pastePanel: JPanel
     lateinit var actPanel: JPanel
     lateinit var logPanel: JPanel
+    lateinit var pasteScrollPane: JScrollPane
     lateinit var pasteTextArea: JTextArea
     lateinit var networkFileLabel: JLabel
     lateinit var networkFileButton: JButton
@@ -134,6 +135,8 @@ class Raffle : WithMainPanel {
                 Method.LOG.optionString -> this.switchMethod(Method.LOG)
             }
         }
+        // Paste panel setup
+        this.pasteScrollPane.border = null
         // ACT panel setup
         this.typeComboBox.addItem("Any")
         FFXIVEntryType.values()
